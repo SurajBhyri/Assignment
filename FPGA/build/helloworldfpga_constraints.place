@@ -1,0 +1,4 @@
+$iopadmap$helloworldfpga.nD2   8   3  0  # set_io nD2		6
+$iopadmap$helloworldfpga.nD1  10   3  0  # set_io nD1		2
+$iopadmap$helloworldfpga.nD0  12   3  0  # set_io nD0		3
+$iopadmap$helloworldfpga.c  14   3  0  # set_io c		64
