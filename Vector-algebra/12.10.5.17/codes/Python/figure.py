@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt 
 from numpy import linalg as LA 
 import math
-from fractions import Fraction 
 
   
 O = np.array(([0, 0])) 
