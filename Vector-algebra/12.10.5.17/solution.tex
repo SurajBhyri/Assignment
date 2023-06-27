@@ -4,9 +4,21 @@
 \usepackage{tasks}
 \usepackage{graphicx}
 \usepackage{listings}
+
+\def\inputGnumericTable{}
+\usepackage[latin1]{inputenc}
+\usepackage{fullpage}
+\usepackage{color}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{calc}
+\usepackage{multirow}
+\usepackage{hhline}
+\usepackage{ifthen}
+
+
 \newcommand{\norm}[1]{\lVert#1\rVert}
 \renewcommand{\vec}[1]{\textbf{#1}}
-%\renewcommand{\thechoice}{\Alph{choice}}
 \begin{document}
 \onehalfspacing
 \begin{center}
@@ -27,6 +39,11 @@ The following problem is question 17 from exercise 10.5
 \end{enumerate}
 	\textbf{Solution:}
 \\
+The input parameters for this problem are given in Table \ref{tab:LC}
+\begin{table}[ht!]\centering
+	\input{tables/tab}
+	\caption{Input vectors \label{tab:LC}}
+\end{table}
 Given,
 \begin{align}
 	\norm{\vec{a}}=\norm{\vec{b}}=1\label{eq:1}
