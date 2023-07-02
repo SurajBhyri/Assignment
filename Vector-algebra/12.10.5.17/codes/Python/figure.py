@@ -3,11 +3,12 @@ import matplotlib.pyplot as plt
 from numpy import linalg as LA 
 import math
 
-  
+a = (2*np.pi)/3
+b = (np.pi)/3
 O = np.array(([0, 0])) 
 A = np.array(([1, 0])) 
-B = np.array(([-1/2, math.sqrt(3)/2]))
-C = np.array(([-1, 0])) 
+B = np.array(([np.cos(a), np.sin(a)])) 
+C = np.array(([np.cos(b), np.sin(b)]))
 
 def line_gen(A,B):
    len =2
@@ -23,33 +24,24 @@ def line_gen(A,B):
 x_OA = line_gen(O,A)
 x_OB = line_gen(O,B)
 x_OC = line_gen(O,C)
-x_CB = line_gen(C,B)
-
 
 #Plotting all lines
-plt.plot(x_OA[0,:],x_OA[1,:],label='$OA$')
-plt.plot(x_OB[0,:],x_OB[1,:],label='$OB$')
-plt.plot(x_OC[0,:],x_OC[1,:],label='$OC$')
-plt.plot(x_CB[0,:],x_CB[1,:],label='$CB$')
-
+plt.plot(x_OA[0,:],x_OA[1,:],label='a')
+plt.plot(x_OB[0,:],x_OB[1,:],label='b')
+plt.plot(x_OC[0,:],x_OC[1,:],label='c')
+plt.text(0.5, -0.05, 'a')
+plt.text(-0.35, 0.45, 'b')
+plt.text(0.25, 0.37, 'c')
 #Labeling the coordinates
 tri_coords = np.vstack((O,A,B,C)).T
 plt.scatter(tri_coords[0,:], tri_coords[1,:])
-vert_labels = ['O''(0,0)', 'A''(1,0)', 'B''($\dfrac{-1}{2}$,$\dfrac{\sqrt{3}}{2}$)', 'C''(-1,0)']
 
-for i, txt in enumerate(vert_labels):
-    plt.annotate(txt, # this is the text
-                 (tri_coords[0,i], tri_coords[1,i]), # this is the point to label
-                 textcoords="offset points", # how to position the text
-                 xytext=(0,20), # distance from text to points (x,y)
-                 ha='center') # horizontal alignment can be left, right or center
-
-plt.xlabel('$x$')
-plt.ylabel('$y$')
+plt.xlabel('$X-Axis$')
+plt.ylabel('$Y-axis$')
 plt.legend(loc='best')
 plt.grid() # minor
 plt.axis('equal')
 plt.title('Sum of two unit vectors',size=15)
 #if using termux
-plt.savefig('figs/fig')
+plt.savefig('/sdcard/Download/Assignment/Vector-algebra/12.10.5.17/codes/Python/figs/fig')
 #plt.show()
