@@ -1,5 +1,5 @@
 typedef struct Node {
-    int value;
+    double value;
     int row;
     int col;
     struct Node* next;
@@ -7,7 +7,7 @@ typedef struct Node {
 
 
 
-Node* createNode(int value, int row, int col) 
+Node* createNode(double value, int row, int col) 
 {
     Node* newNode = (Node*)malloc(sizeof(Node));
     newNode->value = value;
@@ -15,6 +15,50 @@ Node* createNode(int value, int row, int col)
     newNode->col = col;
     newNode->next = NULL;
     return newNode;
+}
+
+Node* createMatrix(int numRows, int numCols) {
+    Node* head = NULL;
+    Node* currentRow = NULL;
+
+    // Loop through each row
+    for (int i = 0; i < numRows; i++) {
+        Node* newRow = NULL;
+        Node* currentCol = NULL;
+
+        // Loop through each column in the current row
+        for (int j = 0; j < numCols; j++) {
+            double value;
+            //printf("Enter the value at position (%d,%d): ", i, j);
+            value=1;
+
+
+            // If the value is not 0, create a new node and add it to the matrix
+            if (value != 1) {
+                Node* newNode = createNode(value, i, j);
+                if (newRow == NULL) {
+                    newRow = newNode;
+                    currentCol = newNode;
+                } else {
+                    currentCol->next = newNode;
+                    currentCol = newNode;
+                }
+            }
+        }
+
+        // If the current row is not empty, add it to the matrix
+        if (newRow != NULL) {
+            if (head == NULL) {
+                head = newRow;
+                currentRow = newRow;
+            } else {
+                currentRow->next = newRow;
+                currentRow = newRow;
+            }
+        }
+    }
+
+    return head;
 }
 
 void insert_node(Node **head, int row, int col, int val) {
@@ -36,7 +80,7 @@ void insert_node(Node **head, int row, int col, int val) {
 
     current->next = new_node;
 }
-// Function to load a matrix from .dat files
+
 
 Node* loadtxt(char *str) {
     FILE *fp = fopen(str, "r");
@@ -53,8 +97,8 @@ Node* loadtxt(char *str) {
 
         // Loop through each column in the current row
         for (int j = 0; j < numCols; j++) {
-            int value;
-            fscanf(fp,"%d", &value);
+            double value;
+            fscanf(fp,"%lf", &value);
 
             if (value != 0) {
                 Node* newNode = createNode(value, i, j);
@@ -84,42 +128,46 @@ Node* loadtxt(char *str) {
 
 
 
-void print(Node* head) {
 
-    int numRows = 0, numCols = 0;
-    for (Node* curr = head; curr != NULL; curr = curr->next) {
-        if (curr->row >= numRows) {
-            numRows = curr->row + 1;
-        }
-        if (curr->col >= numCols) {
-            numCols = curr->col + 1;
-        }
-    }
-    if (numCols == 1) {
-        numRows = 2;
+void print(Node *head) {
+    if (head == NULL) {
+        printf("Empty matrix\n");
+        return;
     }
 
-    // Loop through each row in the matrix
-    for (int i = 0; i < numRows; i++) {
-        // Loop through each column in the matrix
-        for (int j = 0; j < numCols; j++) {
+    int max_row = head->row;
+    int max_col = head->col;
 
-            Node* curr = head;
-            while (curr != NULL && (curr->row < i || (curr->row == i && curr->col < j))) {
-                curr = curr->next;
+    Node *current = head;
+    while (current != NULL) {
+        if (current->row > max_row) {
+            max_row = current->row;
+        }
+        if (current->col > max_col) {
+            max_col = current->col;
+        }
+        current = current->next;
+    }
+
+
+for (int i = 0; i <= max_row; i++) {
+        for (int j = 0; j <= max_col; j++) {
+            current = head;
+            double val;
+            while (current != NULL) {
+                if (current->row == i && current->col == j) {
+                    val = current->value;
+                    break;
+                }
+                current = current->next;
             }
-            if (curr != NULL && curr->row == i && curr->col == j) {
-                printf("%d ", curr->value);
-            } else {
-                printf("0 ");
-            }
+            printf("%lf ", val);
         }
         printf("\n");
     }
 }
 
 
-// Function for finding the subtraction of the two matrices
 
 Node *linalg_sub(Node *a, Node *b) {
     Node *result = NULL;
@@ -151,11 +199,11 @@ Node *linalg_sub(Node *a, Node *b) {
         b = b->next;
     }
 
-   return result;
+    return result;
 
 }
+            // If the dot product is not 0, create a new node and add it to the matrix
 
-// Function for Finding the norm of the matrix
 
 double linalg_norm(Node* head, int numRows, int numCols)
 {
@@ -169,9 +217,9 @@ double linalg_norm(Node* head, int numRows, int numCols)
         // Loop through each element in the column
         Node* current = head;
         while (current != NULL) 
-	{
+  {
             if (current->col == j) 
-	    {
+      {
                 colSum += pow(current->value, 2);
             }
             current = current->next;
@@ -182,48 +230,43 @@ double linalg_norm(Node* head, int numRows, int numCols)
     return sqrt(sumOfSquares);
 }
 
-
-// Function for finding the Transpose of the matrix
-
-Node* transpose(Node* head) {
-    Node* transposeHead = NULL;
     
-    // Loop through each node in the original linked list
-    for (Node* curr = head; curr != NULL; curr = curr->next) {
-        // Create a new node with its row and column positions swapped
-        Node* newNode = createNode(curr->value, curr->col, curr->row);
-        
-        if (transposeHead == NULL) {
-            transposeHead = newNode;
-        } else {
-            Node* currTranspose = transposeHead;
-            while (currTranspose->next != NULL) {
-                currTranspose = currTranspose->next;
-            }
-            currTranspose->next = newNode;
-        }
-    }
-    
-    return transposeHead;
+
+double radians(double deg)
+{
+  double rad;
+  rad=deg*(M_PI / 180);
+  return rad;
 }
 
 
+Node* mat_val(Node* head, double scalar) {
+    // Loop through each node in the linked list
+    for (Node* curr = head; curr != NULL; curr = curr->next) {
+        // Multiply the value of the node with the scalar
+        double result = scalar * curr->value;
+        
+        curr->value = result;
+    }
+    
+    return head;
+}
 
 // Function to multiply two matrices
-Node* matmul(Node* A, Node* B, int numRowsA, int numColsB) {
+Node* matmul(Node* a, Node* b, int numRowsa, int numColsb) {
     // Create a new empty linked list for the result
     Node* resultHead = NULL;
     
     // Loop through each row in A
-    for (int i = 0; i < numRowsA; i++) {
+    for (int i = 0; i < numRowsa; i++) {
         // Loop through each column in B
-        for (int j = 0; j < numColsB; j++) {
+        for (int j = 0; j < numColsb; j++) {
             int dotProduct = 0;
         
-            for (Node* currA = A; currA != NULL && currA->row == i; currA = currA->next) {
-                for (Node* currB = B; currB != NULL && currB->col == j; currB = currB->next) {
-                    if (currA->col == currB->row) {
-                        dotProduct += currA->value * currB->value;
+            for (Node* curra = a; curra != NULL && curra->row == i; curra = curra->next) {
+                for (Node* currb = b; currb != NULL && currb->col == j; currb = currb->next) {
+                    if (curra->col == currb->row) {
+                        dotProduct += curra->value * currb->value;
                     }
                 }
             }
@@ -254,18 +297,28 @@ Node* matmul(Node* A, Node* B, int numRowsA, int numColsB) {
 }
 
 
-// Function for multiplying the matrix with the float value
+// Function for finding the Transpose of the matrix
 
-Node* mat_val(Node* head, double scalar) {
-    // Loop through each node in the linked list
+Node* transpose(Node* head) {
+    Node* transposeHead = NULL;
+    
+    // Loop through each node in the original linked list
     for (Node* curr = head; curr != NULL; curr = curr->next) {
-        // Multiply the value of the node with the scalar
-        double result = scalar * curr->value;
+        // Create a new node with its row and column positions swapped
+        Node* newNode = createNode(curr->value, curr->col, curr->row);
         
-        curr->value = result;
+        if (transposeHead == NULL) {
+            transposeHead = newNode;
+        } else {
+            Node* currTranspose = transposeHead;
+            while (currTranspose->next != NULL) {
+                currTranspose = currTranspose->next;
+            }
+            currTranspose->next = newNode;
+        }
     }
     
-    return head;
+    return transposeHead;
 }
 
 
@@ -294,43 +347,72 @@ double get(Node* head, int row, int col) {
 }
 
 
-// Function for saving the matrix into a .dat file
-void save(char *filename, Node* head, int numRows, int numCols) {
+
+Node* assign(int numRows, int numCols,double *array)
+{
+    Node* head = NULL;
+    Node* currentRow = NULL;
+
+    // Loop through each row
+    for (int i = 0; i < numRows; i++) 
+    {
+        Node* newRow = NULL;
+        Node* currentCol = NULL;
+
+        // Loop through each column in the current row
+        for (int j = 0; j < numCols; j++)
+ {
+            double value;
+     int index=0;
+            //printf("Enter the value at position (%d,%d): ", i, j);
+            //scanf("%d", &value);
+     value=array[i];
+     
+
+
+            // If the value is not 0, create a new node and add it to the matrix
+            if (value != 0)
+     {
+                Node* newNode = createNode(value, i, j);
+                if (newRow == NULL) {
+                    newRow = newNode;
+                    currentCol = newNode;
+                } 
+  else
+  {
+                    currentCol->next = newNode;
+                    currentCol = newNode;
+                }
+            }
+        }
+
+        // If the current row is not empty, add it to the matrix
+        if (newRow != NULL) {
+            if (head == NULL) {
+                head = newRow;
+                currentRow = newRow;
+            } else {
+                currentRow->next = newRow;
+                currentRow = newRow;
+            }
+        }
+    }
+
+    return head;
+}
+
+void savef(char *filename, Node* head, int numRows, int numCols)
+{
+	 
     FILE* fp = fopen(filename, "w");
     if (fp == NULL) {
         printf("Error: Could not open file for writing.\n");
         return;
     }
 
-    // Loop through each row
-    for (int i = 0; i < numRows; i++) {
-        Node* current = head;
-        int j = 0;
-
-        // Loop through each column in the current row
-        while (current != NULL && current->row == i) {
-            // Fill in any missing values with 0
-            while (j < current->col) {
-                fprintf(fp, "%d ", 0);
-                j++;
-            }
-
-            // Write the value of the current node to the file
-            fprintf(fp, "%d ", current->value);
-            j++;
-            current = current->next;
-        }
-
-        // Fill in any remaining empty columns with 0
-        while (j < numCols) {
-            fprintf(fp, "%d ", 0);
-            j++;
-        }
-
-        // Add a newline character at the end of each row
-        fprintf(fp, "\n");
+    while(head!=NULL)
+    {
+	fprintf(fp,"%lf\n",head->value);
+	head=head->next;
     }
-
-    fclose(fp);
 }
-
